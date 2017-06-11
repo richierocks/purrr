@@ -10,11 +10,11 @@
 #'   as they occur?
 #' @param otherwise Default value to use when an error occurs.
 #' @param max_attempts Positive integer. \code{persistent} functions will try
-#' to run this many times before giving up.
+#'   to run this many times before giving up.
 #' @param wait_seconds Positive number. Base multiplier for time in seconds to
-#' wait between attempts. The time increases exponentially, with a wait of
-#' \code{wait_seconds * 2 ^ (i - 1)} between the \code{i}th and \code{i + 1}th
-#' attempts.
+#'   wait between attempts. The time increases exponentially, with a wait of
+#'   \code{wait_seconds * 2 ^ (i - 1)} between the \code{i}th and \code{i + 1}th
+#'   attempts.
 #' @return `safely`: wrapped function instead returns a list with
 #'   components `result` and `error`. One value is always `NULL`.
 #'
