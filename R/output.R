@@ -9,7 +9,8 @@
 #' @param quiet Hide errors (`TRUE`, the default), or display them
 #'   as they occur?
 #' @param otherwise Default value to use when an error occurs.
-#'
+#' @param max_attempts Positive integer. \code{persistent} functions will try
+#' to run this many times before giving up.
 #' @return `safely`: wrapped function instead returns a list with
 #'   components `result` and `error`. One value is always `NULL`.
 #'
@@ -19,6 +20,8 @@
 #'   `possibly`: wrapped function uses a default value (`otherwise`)
 #'   whenever an error occurs.
 #'
+#'   `persistently`: wrapped function uses a default value (`otherwise`)
+#'   whenever an error occurs max_attempts times.
 #' @export
 #' @examples
 #' safe_log <- safely(log)

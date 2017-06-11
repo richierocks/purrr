@@ -44,6 +44,9 @@ to extract named attributes. If a component is not present, the value of
 
 \item{quiet}{Hide errors (\code{TRUE}, the default), or display them
 as they occur?}
+
+\item{max_attempts}{Positive integer. \code{persistent} functions will try
+to run this many times before giving up.}
 }
 \value{
 \code{safely}: wrapped function instead returns a list with
@@ -54,6 +57,9 @@ components \code{result} and \code{error}. One value is always \code{NULL}.
 
 \code{possibly}: wrapped function uses a default value (\code{otherwise})
 whenever an error occurs.
+
+\code{persistently}: wrapped function uses a default value (\code{otherwise})
+whenever an error occurs max_attempts times.
 }
 \description{
 These functions wrap functions so that instead of generating side effects
