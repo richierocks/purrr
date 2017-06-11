@@ -14,7 +14,8 @@ quietly(.f)
 
 possibly(.f, otherwise, quiet = TRUE)
 
-persistently(.f, otherwise = NULL, quiet = TRUE, max_attempts = 5)
+persistently(.f, otherwise = NULL, quiet = TRUE, max_attempts = 5,
+  wait_seconds = 0)
 
 auto_browse(.f)
 }
@@ -47,6 +48,11 @@ as they occur?}
 
 \item{max_attempts}{Positive integer. \code{persistent} functions will try
 to run this many times before giving up.}
+
+\item{wait_seconds}{Positive number. Base multiplier for time in seconds to
+wait between attempts. The time increases exponentially, with a wait of
+\code{wait_seconds * 2 ^ (i - 1)} between the \code{i}th and \code{i + 1}th
+attempts.}
 }
 \value{
 \code{safely}: wrapped function instead returns a list with
@@ -96,7 +102,8 @@ risky_runif <- function(lo = 0, hi = 1) {
   }
   y
 }
-persistent_risky_runif <- persistently(risky_runif, otherwise = -99, quiet = FALSE)
+persistent_risky_runif <- persistently(
+  risky_runif, otherwise = -99, quiet = FALSE, wait_seconds = 0.01)
 set.seed(1)
 persistent_risky_runif()
 set.seed(3)

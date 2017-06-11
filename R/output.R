@@ -11,6 +11,10 @@
 #' @param otherwise Default value to use when an error occurs.
 #' @param max_attempts Positive integer. \code{persistent} functions will try
 #' to run this many times before giving up.
+#' @param wait_seconds Positive number. Base multiplier for time in seconds to
+#' wait between attempts. The time increases exponentially, with a wait of
+#' \code{wait_seconds * 2 ^ (i - 1)} between the \code{i}th and \code{i + 1}th
+#' attempts.
 #' @return `safely`: wrapped function instead returns a list with
 #'   components `result` and `error`. One value is always `NULL`.
 #'
@@ -54,7 +58,8 @@
 #'   }
 #'   y
 #' }
-#' persistent_risky_runif <- persistently(risky_runif, otherwise = -99, quiet = FALSE)
+#' persistent_risky_runif <- persistently(
+#'   risky_runif, otherwise = -99, quiet = FALSE, wait_seconds = 0.01)
 #' set.seed(1)
 #' persistent_risky_runif()
 #' set.seed(3)
@@ -111,17 +116,24 @@ possibly <- function(.f, otherwise, quiet = TRUE) {
 
 #' @export
 #' @rdname safely
-persistently <- function(.f, otherwise = NULL, quiet = TRUE, max_attempts = 5) {
+persistently <- function(.f, otherwise = NULL, quiet = TRUE, max_attempts = 5, wait_seconds = 0) {
   .f <- as_mapper(.f)
   force(max_attempts)
   function(...) {
-    for(i in seq_len(max_attempts)) {
+    for (i in seq_len(max_attempts)) {
       answer <- capture_error(.f(...), quiet = quiet)
-      if(is.null(answer$error)) {
+      if (is.null(answer$error)) {
         return(answer$result)
       }
+      if (wait_seconds > 0) {
+        actual_wait_seconds <- wait_seconds * 2 ^ (i - 1)
+        if (!quiet) {
+          message(sprintf("Retrying in %g seconds", actual_wait_seconds))
+        }
+        Sys.sleep(actual_wait_seconds)
+      }
     }
-    if(!quiet) {
+    if (!quiet) {
       msg <- sprintf(
         "%s failed after %d tries; returning %s",
         deparse(match.call()),
