@@ -4,6 +4,7 @@
 \alias{safely}
 \alias{quietly}
 \alias{possibly}
+\alias{persistently}
 \alias{auto_browse}
 \title{Capture side effects.}
 \usage{
@@ -12,6 +13,8 @@ safely(.f, otherwise = NULL, quiet = TRUE)
 quietly(.f)
 
 possibly(.f, otherwise, quiet = TRUE)
+
+persistently(.f, otherwise = NULL, quiet = TRUE, max_attempts = 5)
 
 auto_browse(.f)
 }
@@ -78,6 +81,20 @@ list("a", 10, 100) \%>\%
 # To replace errors with a default value, use possibly().
 list("a", 10, 100) \%>\%
   map_dbl(possibly(log, NA_real_))
+
+# persistently() makes a function repeatedly try to work
+risky_runif <- function(lo = 0, hi = 1) {
+  y <- runif(1, lo, hi)
+  if(y < 0.9) {
+    stop(y, " is too small")
+  }
+  y
+}
+persistent_risky_runif <- persistently(risky_runif, otherwise = -99, quiet = FALSE)
+set.seed(1)
+persistent_risky_runif()
+set.seed(3)
+persistent_risky_runif()
 
 # For interactive usage, auto_browse() is useful because it automatically
 # starts a browser() in the right place.

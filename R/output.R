@@ -41,6 +41,20 @@
 #' list("a", 10, 100) %>%
 #'   map_dbl(possibly(log, NA_real_))
 #'
+#' # persistently() makes a function repeatedly try to work
+#' risky_runif <- function(lo = 0, hi = 1) {
+#'   y <- runif(1, lo, hi)
+#'   if(y < 0.9) {
+#'     stop(y, " is too small")
+#'   }
+#'   y
+#' }
+#' persistent_risky_runif <- persistently(risky_runif, otherwise = -99, quiet = FALSE)
+#' set.seed(1)
+#' persistent_risky_runif()
+#' set.seed(3)
+#' persistent_risky_runif()
+#'
 #' # For interactive usage, auto_browse() is useful because it automatically
 #' # starts a browser() in the right place.
 #' f <- function(x) {
@@ -87,6 +101,31 @@ possibly <- function(.f, otherwise, quiet = TRUE) {
         stop("Terminated by user", call. = FALSE)
       }
     )
+  }
+}
+
+#' @export
+#' @rdname safely
+persistently <- function(.f, otherwise = NULL, quiet = TRUE, max_attempts = 5) {
+  .f <- as_mapper(.f)
+  force(max_attempts)
+  function(...) {
+    for(i in seq_len(max_attempts)) {
+      answer <- capture_error(.f(...), quiet = quiet)
+      if(is.null(answer$error)) {
+        return(answer$result)
+      }
+    }
+    if(!quiet) {
+      msg <- sprintf(
+        "%s failed after %d tries; returning %s",
+        deparse(match.call()),
+        max_attempts,
+        format(otherwise)
+      )
+      message(msg)
+    }
+    otherwise
   }
 }
 
