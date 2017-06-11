@@ -120,3 +120,7 @@ if (interactive()) {
 # because they are implemented in C so there's no useful environment
 # for you to interact with.
 }
+\seealso{
+\code{\link{httr}{RETRY}} is a special case of \code{persistently}
+for HTTP verbs.
+}

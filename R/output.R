@@ -22,6 +22,8 @@
 #'
 #'   `persistently`: wrapped function uses a default value (`otherwise`)
 #'   whenever an error occurs max_attempts times.
+#' @seealso \code{\link{httr}{RETRY}} is a special case of \code{persistently}
+#' for HTTP verbs.
 #' @export
 #' @examples
 #' safe_log <- safely(log)
