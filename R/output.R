@@ -128,14 +128,14 @@ persistently <- function(.f, otherwise = NULL, quiet = TRUE, max_attempts = 5, w
       if (wait_seconds > 0) {
         actual_wait_seconds <- wait_seconds * 2 ^ (i - 1)
         if (!quiet) {
-          message(sprintf("Retrying in %g seconds", actual_wait_seconds))
+          message(sprintf("Retrying in %g seconds.", actual_wait_seconds))
         }
         Sys.sleep(actual_wait_seconds)
       }
     }
     if (!quiet) {
       msg <- sprintf(
-        "%s failed after %d tries; returning %s",
+        "%s failed after %d tries; returning %s.",
         deparse(match.call()),
         max_attempts,
         format(otherwise)
