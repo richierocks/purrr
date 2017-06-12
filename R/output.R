@@ -118,7 +118,10 @@ possibly <- function(.f, otherwise, quiet = TRUE) {
 #' @rdname safely
 persistently <- function(.f, otherwise = NULL, quiet = TRUE, max_attempts = 5, wait_seconds = 0) {
   .f <- as_mapper(.f)
+  force(otherwise)
+  force(quiet)
   force(max_attempts)
+  force(wait_seconds)
   function(...) {
     for (i in seq_len(max_attempts)) {
       answer <- capture_error(.f(...), quiet = quiet)
