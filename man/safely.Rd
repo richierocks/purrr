@@ -50,9 +50,10 @@ as they occur?}
 to run this many times before giving up.}
 
 \item{wait_seconds}{Positive number. Base multiplier for time in seconds to
-wait between attempts. The time increases exponentially, with a wait of
-\code{wait_seconds * 2 ^ (i - 1)} between the \code{i}th and \code{i + 1}th
-attempts.}
+wait between attempts. The time increases exponentially, with a wait time
+randomly chosen from a uniform distribution between \code{0} and
+\code{wait_seconds * 2 ^ (i - 1)} senconds, between the \code{i}th and
+\code{i + 1}th attempts.}
 }
 \value{
 \code{safely}: wrapped function instead returns a list with
