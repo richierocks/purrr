@@ -1,15 +1,15 @@
 # purrr 0.2.2.9000
 
-## purrr and dplyr
+## Dependencies
 
-purrr no longer depends on dplyr, lazyeval, or Rcpp. This makes the dependency graph of the tidyverse simpler, and makes purrr more suitable as a dependency of lower-level packages. This means that data-frame based mappers (`dmap()`, `dmap_at()`, `dmap_if()`, `invoke_rows()`, `slice_rows()`, `map_rows()`, `by_slice()`, `by_row()`, and `unslice()`) have   been moved to a new package, purrrlyr. This is a bit of an aggressive change but it needed to be done, and in this case I think it's better to rip the band aid off quickly.
+purrr no longer depends on lazyeval or Rcpp (or dplyr, as of the previous version). This makes the dependency graph of the tidyverse simpler, and makes purrr more suitable as a dependency of lower-level packages.
 
 There have also been two changes to eliminate name conflicts between purrr and dplyr:
 
 * `order_by()`, `sort_by()` and `split_by()` have been removed. `order_by()`
   conflicted with `dplyr::order_by()` and the complete family doesn't feel that
   useful. Use tibbles instead (#217).
-  
+   
 * `contains()` has been renamed to `has_element()` to avoid conflicts with
   dplyr (#217).
 
@@ -88,6 +88,8 @@ There have also been two changes to eliminate name conflicts between purrr and d
 
 ## Minor improvements and bug fixes
 
+* Thanks to @dchiu911, the unit test coverage of purrr is now much greater.
+
 * All predicate functions are re-exported from rlang (#124).
 
 * `compact()` now works with standard mapper conventions (#282).
@@ -98,7 +100,7 @@ There have also been two changes to eliminate name conflicts between purrr and d
   `zip_n()`). Similarly, `cross_d()` has been renamed to `cross_df()`
   for consistency with `map_df()`.
 
-* `every()` and `some()` now return `NA` if present in the output (#174).
+* `every()` and `some()` now return `NA` if present in the input (#174).
 
 * `invoke()` uses a more robust approach to generate the argument list (#249)
   It no longer uses lazyeval to figure out which enviroment a character `f` 
@@ -120,12 +122,23 @@ There have also been two changes to eliminate name conflicts between purrr and d
 
 * `set_names()` can now take a function to tranform the names programmatically
   (#276), and you can supply names in `...` to reduce typing even more 
-  more (#316).
+  more (#316). `set_names()` is now powered by `rlang::set_names()`.
 
 * `safely()` now actually uses the `quiet` argument (#296).
 
 * `transpose()` now matches by name if available (#164). You can 
   override the default choice with the new `.names` argument.
+
+# purrr 0.2.2.1
+
+This is a compatibility release with dplyr 0.6.0.
+
+* All data-frame based mappers have been removed in favour of new
+  functions and idioms in the tidyverse. `dmap()`, `dmap_at()`,
+  `dmap_if()`, `invoke_rows()`, `slice_rows()`, `map_rows()`,
+  `by_slice()`, `by_row()`, and `unslice()` have been moved to
+  purrrlyr. This is a bit of an aggresive change but it allows us to
+  make the dependencies much lighter.
 
 # purrr 0.2.2
 
