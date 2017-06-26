@@ -86,6 +86,10 @@ There have also been two changes to eliminate name conflicts between purrr and d
   operates similarly to `list_modify()` but combines instead of replacing 
   (#322).
 
+* `persistently(f)` modifies a function, `f`, so that it is repeatedly called  
+  until it succeeds.
+  
+
 ## Minor improvements and bug fixes
 
 * Thanks to @dchiu911, the unit test coverage of purrr is now much greater.
