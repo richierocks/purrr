@@ -59,12 +59,25 @@
 #'   }
 #'   y
 #' }
-#' persistent_risky_runif <- persistently(
-#'   risky_runif, otherwise = -99, quiet = FALSE, wait_seconds = 0.01)
+#'
+#' persistent_risky_runif <-
+#'   persistently(risky_runif, quiet = FALSE, wait_seconds = 0.01)
+#'
 #' set.seed(1)
 #' persistent_risky_runif()
 #' set.seed(3)
 #' persistent_risky_runif()
+#'
+#' safe_persistent_risky_runif <-
+#'   safely(
+#'     persistently(risky_runif, quiet = FALSE, wait_seconds = 0.01),
+#'     otherwise = -99
+#'   )
+#'
+#' set.seed(1)
+#' safe_persistent_risky_runif()
+#' set.seed(3)
+#' safe_persistent_risky_runif()
 #'
 #' # For interactive usage, auto_browse() is useful because it automatically
 #' # starts a browser() in the right place.
@@ -117,20 +130,23 @@ possibly <- function(.f, otherwise, quiet = TRUE) {
 
 #' @export
 #' @rdname safely
-persistently <- function(.f, otherwise = NULL, quiet = TRUE, max_attempts = 5, wait_seconds = 0) {
-  .f <- as_mapper(.f)
-  force(otherwise)
+persistently <- function(.f, quiet = TRUE, max_attempts = 5,
+                         wait_seconds = 0) {
+
+  .f <- purrr::as_mapper(.f)
+
   force(quiet)
   force(max_attempts)
   force(wait_seconds)
+
   function(...) {
     for (i in seq_len(max_attempts)) {
-      answer <- capture_error(.f(...), quiet = quiet)
+      answer <- purrr:::capture_error(.f(...), quiet = quiet)
       if (is.null(answer$error)) {
         return(answer$result)
       }
       if (wait_seconds > 0) {
-        actual_wait_seconds <- runif(1, 0, wait_seconds * 2 ^ (i - 1))
+        actual_wait_seconds <- stats::runif(1, 0, wait_seconds * 2 ^ (i - 1))
         if (!quiet) {
           message(sprintf("Retrying in %.3g seconds.", actual_wait_seconds))
         }
@@ -139,14 +155,13 @@ persistently <- function(.f, otherwise = NULL, quiet = TRUE, max_attempts = 5, w
     }
     if (!quiet) {
       msg <- sprintf(
-        "%s failed after %d tries; returning %s.",
+        "%s failed after %d tries",
         deparse(match.call()),
-        max_attempts,
-        format(otherwise)
+        max_attempts
       )
       message(msg)
     }
-    otherwise
+    stop(answer$error)
   }
 }
 
