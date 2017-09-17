@@ -144,6 +144,6 @@ if (interactive()) {
 # for you to interact with.
 }
 \seealso{
-\code{\link{httr}{RETRY}} is a special case of \code{persistently}
+\code{\link[httr:RETRY]{httr::RETRY()}} is a special case of \code{\link[=persistently]{persistently()}}
 for HTTP verbs.
 }

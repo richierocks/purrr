@@ -27,7 +27,7 @@
 #'
 #'   `persistently`: wrapped function attempts to run `max_attempts`
 #'    times; an error occurs if all attempts fail.
-#' @seealso \code{\link{httr}{RETRY}} is a special case of \code{persistently}
+#' @seealso [httr::RETRY()] is a special case of [persistently()]
 #' for HTTP verbs.
 #' @export
 #' @examples
