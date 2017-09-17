@@ -45,13 +45,13 @@ to extract named attributes. If a component is not present, the value of
 \item{quiet}{Hide errors (\code{TRUE}, the default), or display them
 as they occur?}
 
-\item{max_attempts}{Positive integer. \code{persistent} functions will try
-to run this many times before giving up.}
+\item{max_attempts}{Positive integer. Functions wrapped by \code{persistently()}
+will try to run this many times before giving up.}
 
 \item{wait_seconds}{Positive number. Base multiplier for time in seconds to
 wait between attempts. The time increases exponentially, with a wait time
 randomly chosen from a uniform distribution between \code{0} and
-\code{wait_seconds * 2 ^ (i - 1)} senconds, between the \code{i}th and
+\code{wait_seconds * 2 ^ (i - 1)} seconds, between the \code{i}th and
 \code{i + 1}th attempts.}
 }
 \value{
