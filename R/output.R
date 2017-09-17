@@ -136,7 +136,7 @@ possibly <- function(.f, otherwise, quiet = TRUE) {
 persistently <- function(.f, quiet = TRUE, max_attempts = 5,
                          wait_seconds = 0) {
 
-  .f <- purrr::as_mapper(.f)
+  .f <- as_mapper(.f)
 
   force(quiet)
   force(max_attempts)
@@ -144,7 +144,7 @@ persistently <- function(.f, quiet = TRUE, max_attempts = 5,
 
   function(...) {
     for (i in seq_len(max_attempts)) {
-      answer <- purrr:::capture_error(.f(...), quiet = quiet)
+      answer <- capture_error(.f(...), quiet = quiet)
       if (is.null(answer$error)) {
         return(answer$result)
       }
