@@ -14,8 +14,7 @@ quietly(.f)
 
 possibly(.f, otherwise, quiet = TRUE)
 
-persistently(.f, otherwise = NULL, quiet = TRUE, max_attempts = 5,
-  wait_seconds = 0)
+persistently(.f, quiet = TRUE, max_attempts = 5, wait_seconds = 0)
 
 auto_browse(.f)
 }
@@ -65,8 +64,8 @@ components \code{result} and \code{error}. One value is always \code{NULL}.
 \code{possibly}: wrapped function uses a default value (\code{otherwise})
 whenever an error occurs.
 
-\code{persistently}: wrapped function uses a default value (\code{otherwise})
-whenever an error occurs max_attempts times.
+\code{persistently}: wrapped function attempts to run \code{max_attempts}
+times; an error occurs if all attempts fail.
 }
 \description{
 These functions wrap functions so that instead of generating side effects
@@ -103,12 +102,28 @@ risky_runif <- function(lo = 0, hi = 1) {
   }
   y
 }
-persistent_risky_runif <- persistently(
-  risky_runif, otherwise = -99, quiet = FALSE, wait_seconds = 0.01)
+
+persistent_risky_runif <-
+  persistently(risky_runif, quiet = FALSE, wait_seconds = 0.01)
+
 set.seed(1)
 persistent_risky_runif()
 set.seed(3)
 persistent_risky_runif()
+
+# The adverb persistently() acts independently from safely() and
+# possibly(). Thus, you can combine adverbs to get the behaviour you want.
+#
+possible_persistent_risky_runif <-
+  possibly(
+    persistently(risky_runif, quiet = FALSE, wait_seconds = 0.01),
+    otherwise = -99
+  )
+
+set.seed(1)
+possible_persistent_risky_runif()
+set.seed(3)
+possible_persistent_risky_runif()
 
 # For interactive usage, auto_browse() is useful because it automatically
 # starts a browser() in the right place.

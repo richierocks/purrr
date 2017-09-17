@@ -25,8 +25,8 @@
 #'   `possibly`: wrapped function uses a default value (`otherwise`)
 #'   whenever an error occurs.
 #'
-#'   `persistently`: wrapped function uses a default value (`otherwise`)
-#'   whenever an error occurs max_attempts times.
+#'   `persistently`: wrapped function attempts to run `max_attempts`
+#'    times; an error occurs if all attempts fail.
 #' @seealso \code{\link{httr}{RETRY}} is a special case of \code{persistently}
 #' for HTTP verbs.
 #' @export
@@ -68,16 +68,19 @@
 #' set.seed(3)
 #' persistent_risky_runif()
 #'
-#' safe_persistent_risky_runif <-
-#'   safely(
+#' # The adverb persistently() acts independently from safely() and
+#' # possibly(). Thus, you can combine adverbs to get the behaviour you want.
+#' #
+#' possible_persistent_risky_runif <-
+#'   possibly(
 #'     persistently(risky_runif, quiet = FALSE, wait_seconds = 0.01),
 #'     otherwise = -99
 #'   )
 #'
 #' set.seed(1)
-#' safe_persistent_risky_runif()
+#' possible_persistent_risky_runif()
 #' set.seed(3)
-#' safe_persistent_risky_runif()
+#' possible_persistent_risky_runif()
 #'
 #' # For interactive usage, auto_browse() is useful because it automatically
 #' # starts a browser() in the right place.
